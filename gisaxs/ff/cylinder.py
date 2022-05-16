@@ -8,14 +8,17 @@ import ipdb
 def cylinder(qx, qy, qz, radius, height, orientation = None, shift = None):
 
     # output shape
-    o_shape = (shift.shape[1], qx.shape[0], qx.shape[1])
+    if shift is not None:
+        o_shape = (shift.shape[1], qx.shape[0], qx.shape[1])
+    else:
+        o_shape = (1, qx.shape[0], qx.shape[1])
 
     # roatate if object is oriented
     if orientation is not None:
         angles = orientation.copy()
         q1, q2, q3 = rotate(qx, qy, qz, angles)
     else:
-        q1, q2, q3 = qx, qy, qz
+        q1, q2, q3 = qx.ravel(), qy.ravel(), qz.ravel()
 
     # shift w.r.t unrotated q-coords
     if shift is not None:
@@ -26,11 +29,11 @@ def cylinder(qx, qy, qz, radius, height, orientation = None, shift = None):
     else:
         dq = 1.
 
-    #ipdb.set_trace()
-    qpR = xp.sqrt(q2**2 + q3**2) * radius
     vol = xp.single(2 * xp.pi * radius**2 * height)
+    qpR = xp.sqrt(q2**2 + q3**2) * radius
+
     ff =  xp.sinc(q1 * height)
     ff = ff * j1(qpR) / qpR
-    ff = ff * xp.exp(-1j * qz.ravel() * height / 2)
+    ff = ff * xp.exp(-1j * qz.ravel() * radius)
     ff = vol * dq * ff
     return ff
