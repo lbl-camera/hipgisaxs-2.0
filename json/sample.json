@@ -1,0 +1,31 @@
+{
+    "shapes":
+        [{
+            "formfactor": "sphere",
+            "key": "Au particles", 
+            "radius": 10.0,
+            "delta": 1.0E-06,
+            "beta": 1.0E-08
+         }, {
+            "formfactor": "cylinder",
+            "key": "carbon nanotubes",
+            "radius": { 
+                "dist": "guassian",
+                "mean": "20",
+                "std": 2,
+                "bounds": [10, 30]
+            },
+            "height": {
+                "dist": "guassian",
+                "mean": "1000",
+                "std": 100,
+                "bounds": [500, 3000]
+            },
+            "delta": 1.0E-06,
+            "beta": 1.0E-08
+        }],
+    "unitcell":
+        {  
+            
+        }
+}

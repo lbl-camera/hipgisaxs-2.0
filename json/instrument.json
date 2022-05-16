@@ -1,0 +1,11 @@
+{
+    "detector": {
+        "name": "custom2d",
+        "nrows": 1024,
+        "ncols": 1024,
+        "pixel_size": [1.72E-05, 1.72E-05]
+    },
+    "distance": 4.0,
+    "energy": 10000.0,
+    "incident_angle": 0.2
+}
