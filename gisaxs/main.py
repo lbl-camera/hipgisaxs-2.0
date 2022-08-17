@@ -16,7 +16,7 @@ from common import memcopy_to_device
 if __name__ == '__main__':
 
     # load input parameters
-    with open('config.json') as fp:
+    with open('../json/config.json') as fp:
         cfg = json.load(fp)
 
     alphai = xp.single(cfg['incident'] * xp.pi / 180)
@@ -26,11 +26,9 @@ if __name__ == '__main__':
     reflectivity_index = complex(cfg['delta'], cfg['beta'])
     
     N = 300
-    radius = 10
-    height = 1000
     
     #-----------------------
-    temp = xp.array(np.load('/home/dkumar/data/roth/Location_xyz_rot_XYZEul.npy'), dtype=np.single)
+    temp = xp.array(np.load('/home/dkumar/Data/roth/agnw_data.npy'), dtype=np.single)
     #-----------------------
     # split work
     Ntotal = temp.shape[1]
@@ -45,6 +43,8 @@ if __name__ == '__main__':
         iend = min(ibeg+N, Ntotal)
         shifts = temp[0:3, ibeg:iend]
         orientations = OrderedDict({'x': temp[3,ibeg:iend], 'y': temp[4,ibeg:iend], 'z': temp[5,ibeg:iend]})
+        radius = temp[6,ibeg:iend]
+        height = temp[7,ibeg:iend]
 
         # DWBA
         for j in range(4):
