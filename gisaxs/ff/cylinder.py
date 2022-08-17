@@ -29,11 +29,11 @@ def cylinder(qx, qy, qz, radius, height, orientation = None, shift = None):
     else:
         dq = 1.
 
-    vol = xp.single(2 * xp.pi * radius**2 * height)
-    qpR = xp.sqrt(q2**2 + q3**2) * radius
+    vol = xp.pi * radius**2 * height
+    qpR = (xp.sqrt(q2**2 + q3**2).T * radius).T
 
-    ff =  xp.sinc(q1 * height)
+    ff =  xp.sinc((q1.T * height).T)
     ff = ff * j1(qpR) / qpR
-    ff = ff * xp.exp(-1j * qz.ravel() * radius)
-    ff = vol * dq * ff
-    return ff
+    ff = ff * xp.exp(-1j * xp.outer(radius, qz.ravel()))
+    ff = (vol * (dq * ff).T).T
+    return ff.sum(axis=0)
