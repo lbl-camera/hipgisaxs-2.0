@@ -2,8 +2,8 @@ import numpy as np
 import json
 
 
-horizontal = (-1, 1, 512)
-vertical = (0, 2, 512)
+horizontal = (-0.5, 0.5, 512)
+vertical = (0, 1, 512)
 incident = 0.16
 
 alpha = np.linspace(np.deg2rad(vertical[0]),   np.deg2rad(vertical[1]),   vertical[2])
@@ -18,9 +18,11 @@ config = {
     'theta': theta.tolist(),
     'alpha': alpha.tolist(),
     'delta': 1.0E-06,
-    'beta':  1.E-08
+    'beta':  1.E-08,
+    'datafile': '/home/dkumar/data/roth/Location_xyz_rot_XYZEul.npy',
+    'cylinder': { 'radius': 10., 'height': 100 }
 }
 
-with open('config.json', 'w') as fp:
+with open('../json/config.json', 'w') as fp:
     json.dump(config, fp)
 
