@@ -3,7 +3,6 @@
 from common import xp
 from common import j1
 from rotation import rotate
-import ipdb
 
 def cylinder(qx, qy, qz, radius, height, orientation = None, shift = None):
 

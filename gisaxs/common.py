@@ -1,11 +1,11 @@
 try:
     import cupy as xp
     from cupyx.scipy.special import j1
-    array_type = xp._core.core.ndarray
+    array_type = "cupy"
 except ImportError:
     import numpy as xp
     from scipy.special import j1
-    array_type = xp.ndarray
+    array_type = "numpy"
 
 def memcopy_to_device(host_pointers):
 

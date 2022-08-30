@@ -2,6 +2,7 @@
 import json
 
 from common import xp
+from common import array_type
 import numpy as np
 from collections import OrderedDict
 
@@ -20,15 +21,18 @@ if __name__ == '__main__':
         cfg = json.load(fp)
 
     alphai = xp.single(cfg['incident'] * xp.pi / 180)
-    alpha = xp.array(cfg['alpha'], dtype=np.single)
-    theta = xp.array(cfg['theta'], dtype=np.single)
+    alpha = xp.array(cfg['alpha'], dtype=xp.single)
+    theta = xp.array(cfg['theta'], dtype=xp.single)
     wavelength = cfg['wavelen']
     reflectivity_index = complex(cfg['delta'], cfg['beta'])
     
     N = 300
-    
+    radius = cfg['cylinder']['radius']
+    height = cfg['cylinder']['height']
+    datafile = cfg['datafile'] 
+
     #-----------------------
-    temp = xp.array(np.load('/home/dkumar/Data/roth/agnw_data.npy'), dtype=np.single)
+    temp = xp.array(np.load(datafile), dtype=np.single)
     #-----------------------
     # split work
     Ntotal = temp.shape[1]
@@ -54,5 +58,9 @@ if __name__ == '__main__':
     img = scat.sum(axis=0)
     img = xp.abs(img)**2
     img = img.reshape(qx.shape) 
-    plt.imshow(np.log(img.get()+1), cmap='jet', origin='lower')
+
+    if "cupy" in array_type:
+        img = img.get()
+
+    plt.imshow(np.log(img+1), cmap='jet', origin='lower')
     plt.show()
