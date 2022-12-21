@@ -1,6 +1,6 @@
 
-from common import xp
-from rotation import rotate
+from .common import xp
+from .rotation import rotate
 
 
 def structure_factor(q1, q2, q3, d_space, numelm, orientations = None):

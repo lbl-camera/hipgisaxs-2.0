@@ -1,5 +1,4 @@
-#! /usr/bin/env python
-from common import xp
+from .common import xp
 
 def basic_reflectivity(alpha, reflectivity_index):
 

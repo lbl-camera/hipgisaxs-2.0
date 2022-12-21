@@ -1,5 +1,5 @@
 try:
-    import cupy as xp
+    import NOTWROKINGcupy as xp
     from cupyx.scipy.special import j1
     array_type = "cupy"
 except ImportError:

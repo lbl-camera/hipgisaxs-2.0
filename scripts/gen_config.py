@@ -2,27 +2,25 @@ import numpy as np
 import json
 
 
-horizontal = (-0.5, 0.5, 512)
-vertical = (0, 1, 512)
-incident = 0.16
+horizontal = (-10.32, 13.34, 5254)
+vertical = (-5.16, 14.83, 4439)
+incident = 3.4
 
 alpha = np.linspace(np.deg2rad(vertical[0]),   np.deg2rad(vertical[1]),   vertical[2])
 theta = np.linspace(np.deg2rad(horizontal[0]), np.deg2rad(horizontal[1]), horizontal[2])
 theta, alpha  = np.meshgrid(theta, alpha)
 
-
-
+# CeO2 = {0.000190109844  0.000224374395}
 config = {
-    'wavelen': 0.123984, # nanometer
-    'incident': 0.16,
+    'energy': 878, # nanometer
+    'incident': incident,
     'theta': theta.tolist(),
     'alpha': alpha.tolist(),
-    'delta': 1.0E-06,
-    'beta':  1.E-08,
-    'datafile': '/home/dkumar/data/roth/Location_xyz_rot_XYZEul.npy',
-    'cylinder': { 'radius': 10., 'height': 100 }
+    'delta': 5.333E-04,
+    'beta':  8.2545E-05,
+    'cone': {'radius': 60., 'height': 24.3, 'angle': 50.5 },
+    'lattice': [[200,0,0],[0,200,0],[0,0,1]],
+    'repeats': [500, 500, 0]
 }
-
-with open('../json/config.json', 'w') as fp:
-    json.dump(config, fp)
+with open('../json/config.json', 'w') as fp: json.dump(config, fp)
 

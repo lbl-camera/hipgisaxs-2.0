@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
-from common import xp
-from common import j1
+from ..common import xp
+from ..common import j1
 
 def sphere(qx, qy, qz, radius, shift = None):
 

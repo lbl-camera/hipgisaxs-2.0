@@ -1,6 +1,6 @@
 
-from common import xp
-from fresnel import propagation_coeffs
+from .common import xp
+from .fresnel import propagation_coeffs
 
 def generate_qspace(alpha, theta, alphai, wavelength):
 

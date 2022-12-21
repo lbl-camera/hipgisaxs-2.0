@@ -2,7 +2,7 @@ import numpy as np
 from scipy.special import j1
 from numpy.polynomial.legendre import leggauss
 
-import rotation
+from ..rotation import rotate
 
 def quadrature(func, a, b, args=None, N=10):
     fq = lambda x: func(x) if args is None else func(x, *args)
@@ -30,7 +30,7 @@ def cone(qx, qy, qz, R, H, alpha, orientation=None, shift=None):
     if orientation is None:
         q1, q2, q3 = qx.ravel(), qy.ravel(), qz.ravel()
     else:
-        q1, q2, q3 = rotation.rotate(qx, qy, qz, orientation)
+        q1, q2, q3 = rotate(qx, qy, qz, orientation)
 
     if shift is not None:
         dq = np.exp(1j * shift[0] * qx.ravel())

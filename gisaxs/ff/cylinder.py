@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 
-from common import xp
-from common import j1
-from rotation import rotate
+from ..common import xp
+from ..common import j1
+from ..rotation import rotate
 
 def cylinder(qx, qy, qz, radius, height, orientation = None, shift = None):
 
