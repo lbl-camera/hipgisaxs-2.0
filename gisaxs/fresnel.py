@@ -12,5 +12,5 @@ def basic_reflectivity(alpha, reflectivity_index):
 def propagation_coeffs(alphai, alpha, reflectivity_index):
 
     Ri = basic_reflectivity(alphai, reflectivity_index)
-    Rf = basic_reflectivity(alpha, reflectivity_index)
+    Rf = basic_reflectivity(alpha.ravel(), reflectivity_index)
     return [xp.single(1.), Ri, Rf, Rf*Ri ] 
