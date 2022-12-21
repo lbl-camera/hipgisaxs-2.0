@@ -13,9 +13,6 @@ pylib = os.path.join(cfg['LIBDIR'], cfg['LDLIBRARY'])
 pyinc = cfg['INCLUDEPY']
 pyver = cfg['VERSION']
 
-print(pylib)
-print(pyinc)
-
 # versioning
 main_ns = {}
 ver_path = convert_path('gisaxs/_version.py')
