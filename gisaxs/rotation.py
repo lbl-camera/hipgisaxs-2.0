@@ -9,7 +9,10 @@ import collections
 def Rx(a):
     c = xp.cos(a)
     s = xp.sin(a)
-    rotx = xp.zeros((len(a), 3, 3), dtype=np.single)
+    if isinstance(a, float):
+        rotx = xp.zeros((1, 3, 3), dtype='f')
+    else:
+        rotx = xp.zeros((len(a), 3, 3), dtype='f')
     rotx[:,0,0] = 1
     rotx[:,1,1] = rotx[:,2,2] = c
     rotx[:,1,2] = -s
@@ -19,7 +22,10 @@ def Rx(a):
 def Ry(a):
     c = xp.cos(a)
     s = xp.sin(a)
-    roty = xp.zeros((len(a), 3, 3), dtype=np.single)
+    if isinstance(a, float):
+        roty = xp.zeros((1, 3, 3), dtype='f')
+    else:
+        roty = xp.zeros((len(a), 3, 3), dtype='f')
     roty[:,0,0] = roty[:,2,2] = c
     roty[:,1,1] = 1
     roty[:,0,2] = s
@@ -29,7 +35,10 @@ def Ry(a):
 def Rz(a):
     c = xp.cos(a)
     s = xp.sin(a)
-    rotz = xp.zeros((len(a),3, 3), dtype=np.single)
+    if isinstance(a, float):
+        rotz = xp.zeros((1, 3, 3), dtype='f')
+    else:
+        rotz = xp.zeros((len(a), 3, 3), dtype='f')
     rotz[:,0,0] = rotz[:,1,1] = c
     rotz[:,1,0] = s
     rotz[:,0,1] = -s
@@ -61,4 +70,4 @@ def rotate(qx, qy, qz, orientations):
 
     # rotation
     qrot = xp.dot(rot, q)
-    return qrot[:,0,:], qrot[:,1,:], qrot[:,2,:]
+    return qrot[:,0,:].squeeze(), qrot[:,1,:].squeeze(), qrot[:,2,:].squeeze()
