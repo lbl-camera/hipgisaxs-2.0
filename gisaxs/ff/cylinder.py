@@ -6,12 +6,6 @@ from rotation import rotate
 
 def cylinder(qx, qy, qz, radius, height, orientation = None, shift = None):
 
-    # output shape
-    if shift is not None:
-        o_shape = (shift.shape[1], qx.shape[0], qx.shape[1])
-    else:
-        o_shape = (1, qx.shape[0], qx.shape[1])
-
     # roatate if object is oriented
     if orientation is not None:
         angles = orientation.copy()
@@ -29,10 +23,15 @@ def cylinder(qx, qy, qz, radius, height, orientation = None, shift = None):
         dq = 1.
 
     vol = xp.pi * radius**2 * height
-    qpR = (xp.sqrt(q2**2 + q3**2).T * radius).T
+    qpR = (xp.sqrt(q1**2 + q2**2).T * radius).T
 
-    ff =  xp.sinc((q1.T * height).T)
+    ff =  xp.sinc((q3.T * height * 0.5).T)
     ff = ff * j1(qpR) / qpR
-    ff = ff * xp.exp(-1j * xp.outer(radius, qz.ravel()))
-    ff = (vol * (dq * ff).T).T
-    return ff.sum(axis=0)
+    if isinstance(height, float):
+        ff = ff * xp.exp(-1j * 0.5 * height * q3)
+        ff = vol * dq * ff
+    else:
+        tmp = xp.exp(-1j * 0.5 * height * q3.T).T
+        ff = ff * tmp
+        ff = ((vol * (dq * ff).T).T).sum(axis=0)
+    return ff
