@@ -2,7 +2,7 @@
 from common import xp
 from fresnel import propagation_coeffs
 
-def generate_qspace(alphai, alpha, theta, wavelength):
+def generate_qspace(alpha, theta, alphai, wavelength):
 
     k0 = 2 * xp.pi / wavelength
     qx = k0 * (xp.cos(alpha) * xp.cos(theta) - xp.cos(alphai))
