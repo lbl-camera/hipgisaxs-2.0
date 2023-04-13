@@ -58,8 +58,7 @@ def rotate(qx, qy, qz, orientations):
 
     # build rotation matrix 
     if isinstance(orientations, collections.OrderedDict):
-        axis, angles = orientations.popitem(last=False)
-        rot = rotation_matrix(axis, angles)
+        rot = xp.eye(3)
         for axis, angles in orientations.items():
             rot = xp.matmul(rotation_matrix(axis, angles), rot) 
     else:
