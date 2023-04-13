@@ -4,7 +4,7 @@ import json
 import config
 
 def load_experiment(config):
-    if os.path.exist("experiment.json")
+    if os.path.exist("experiment.json"):
         expf = "experiment.json"
    
         with open(expf, 'r') as fp:
