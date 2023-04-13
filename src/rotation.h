@@ -1,14 +1,19 @@
 
+#include <cuda.h>
+
+#include "cmplx_utils.cuh"
+
 #ifndef ROT_MATRIX__H
 #define ROT_MATRIX__H
 
 namespace hig {
     class RotMatrix_t {
         private:
-            float data_[9];
+            double data_[9];
 
         public:
             // constructor 1
+            __host__ __device__ 
             RotMatrix_t() {
                 data_[0] = 1.;
                 data_[1] = 0.;
@@ -22,23 +27,27 @@ namespace hig {
             }
 
             // constructor 2
-            RotMatrix_t(float *a) {
+            __host__ __device__ 
+            RotMatrix_t(double *a) {
                 for (int i = 0; i < 9; i++) data_[i] = a[i];
             }
 
             // copy constructor
+            __host__ __device__ 
             RotMatrix_t(const RotMatrix_t &rhs) {
                 for (int i = 0; i < 9; i++) data_[i] = rhs.data_[i];
             }
 
             // assignment operator
+            __host__ __device__ 
             RotMatrix_t operator=(const RotMatrix_t &rhs) {
                 for (int i = 0; i < 9; i++) data_[i] = rhs.data_[i];
                 return *this;
             }
 
-            void rotate(const float x, const float y, const complex_t z, 
-                    complex_t *v) const {
+            __device__ 
+            void rotate(const double x, const double y, const cucomplex_t z, 
+                    cucomplex_t *v) const {
     
                 v[0] = data_[0] * x + data_[1] * y + data_[2] * z;
                 v[1] = data_[3] * x + data_[4] * y + data_[5] * z;
