@@ -1,86 +1,90 @@
-
+import os
 import json
+import h5py
 
-from common import xp
-from common import array_type
 import numpy as np
 from collections import OrderedDict
 
 import math as m
 import matplotlib.pyplot as plt
-import rotation
 
-from ff.cylinder import cylinder
-from fresnel import propagation_coeffs
-from structure_factor import structure_factor
-from qspace import generate_qspace
-from common import memcopy_to_device
+from gisaxs import Unitcell
+from gisaxs.rotation import rotate
+from gisaxs.ff import cuboid, sphere
+from gisaxs.fresnel import propagation_coeffs
+from gisaxs.structure_factor import structure_factor
+from gisaxs.detector import Detector
 
 if __name__ == '__main__':
 
-    # load input parameters
-    with open('../json/config.json') as fp:
+
+    # load instrumentation specs
+    with open('json/instrument.json') as fp:
         cfg = json.load(fp)
 
-    alphai = xp.single(cfg['incident'] * xp.pi / 180)
-    alpha = xp.array(cfg['alpha'], dtype=xp.single)
-    theta = xp.array(cfg['theta'], dtype=xp.single)
-    wavelength = cfg['wavelen']
-    reflectivity_index = complex(cfg['delta'], cfg['beta'])
+    alphai = cfg['incident_angle'] * np.pi / 180
+    sdd = cfg['sdd']
+    energy = cfg['energy'] 
+    detector = Detector.from_dict(cfg['detector'])
+
+    beam_center = cfg['beam_center'] 
+
+    # load sample description
+    with open('json/sample.json') as fp:
+       sample = json.load(fp)
+
+    # output
+    with open('json/output.json') as fp:
+        output = json.load(fp)
+
     
-    N = 50
-    radius = cfg['cylinder']['radius']
-    height = cfg['cylinder']['height']
-    datafile = cfg['datafile'] 
+    # substrate
+    substrate = sample['substrate']
+    reflectivity_index = complex(substrate['delta'], substrate['beta'])
 
-    #-----------------------
-    temp = xp.array(np.load(datafile), dtype=np.single).T
-    indx = [0, 1, 2, 6, 7]
-    # scale 
-    temp[indx,:] *= 1000
-    #-----------------------
+    # sample 
+    unitcell = Unitcell(sample['unitcell'])
 
-    # split work
-    Ntotal = temp.shape[1]
-
-    qx, qy, qz = generate_qspace(alphai, alpha, theta, wavelength)
+    theta, alpha = detector.angles(sdd, beam_center)
+    qx, qy, qz = detector.dwba_qvectors(sdd, beam_center, energy, alphai)
     propagation = propagation_coeffs(alphai, alpha.ravel(), reflectivity_index)
-   
+
     #  sample rotations in plane to simulate incoherant part
-    zrots = np.random.rand(1000) * m.pi
+    scat = np.zeros(qx.size, dtype=np.csingle)
     
-    scat = xp.zeros((Ntotal, qx.size), dtype=np.csingle)
-    img = xp.zeros(qx.size, dtype=np.single)
+    # struture factor
+    dspacing = np.array([[1, 0, 0],[0, 100, 0],[0, 0, 1]])
+    repeats = np.array([1, 10000, 1])
 
-    for zrot in zrots:
-        for ibeg in range(0, Ntotal, N):
+    # DWBA
+    for j in range(4):
+        ff = unitcell.calcff(qx, qy, qz[j])
+        sf = structure_factor(qx, qy, qz[j], dspacing, repeats)
+        scat += propagation[j] * sf * ff
 
-            # partition orientation and shifts
-            iend = min(ibeg+N, Ntotal)
-            slc = slice(ibeg, iend)
-            shifts = temp[0:3, slc]
-            orientations = OrderedDict({'x': temp[3, slc], 'y': temp[4,slc], 'z': temp[5,slc]})
-            radius = temp[6,slc]
-            height = temp[7,slc]
-
-            # DWBA
-            for j in range(4):
-                rot1 = OrderedDict({'z': zrot})
-                q1, q2, q3 = rotation.rotate(qx, qy, qz[j], rot1)
-                ff = cylinder(q1, q2, q3, radius, height, orientation = orientations, shift = shifts)
-                scat[slc] += propagation[j] * ff
-
-        tmp = scat.sum(axis=0)
-        img += xp.abs(tmp)**2
-
-    img = img.reshape(qx.shape) 
-    qp = xp.sign(qy) * xp.sqrt(qx**2 + qy**2)
+    img = np.reshape(np.abs(scat)**2, detector.shape)
+    
+    qp = np.sign(qy) * np.sqrt(qx**2 + qy**2)
     qv = qz[0]
-    if "cupy" in array_type:
-        qp = qp.get()
-        qv = qv.get()
-        img = img.get()
-
     qrange = [qp.min(), qp.max(), qv.min(), qv.max()]
-    plt.imshow(np.log(img+1), cmap='jet', origin='lower', extent = qrange)
-    plt.savefig('scat.png')
+ 
+
+    energy_grp = str(energy)+'ev'
+    incident_ang = str(cfg['incident_angle'])
+    fname = output['filename']
+
+    fp = h5py.File(fname, 'a')
+    dst = os.path.join(energy_grp, incident_ang)
+    if not dst in fp:
+        fp.create_group(dst)
+
+    # intensities
+    if 'I' in fp[dst]:
+        dset = fp[os.path.join(dst, 'I')]
+        dset[:] = img 
+    else:
+        dset = fp[dst].create_dataset('I', data = img)
+    dset.attrs['qlims'] = [qp.min(), qp.max(), qv.min(), qv.max()]
+    fp.close()
+ 
+

@@ -1,31 +1,39 @@
 {
-    "shapes":
-        [{
-            "formfactor": "sphere",
-            "key": "Au particles", 
-            "radius": 10.0,
-            "delta": 1.0E-06,
-            "beta": 1.0E-08
-         }, {
-            "formfactor": "cylinder",
-            "key": "carbon nanotubes",
-            "radius": { 
-                "dist": "guassian",
-                "mean": "20",
-                "std": 2,
-                "bounds": [10, 30]
-            },
-            "height": {
-                "dist": "guassian",
-                "mean": "1000",
-                "std": 100,
-                "bounds": [500, 3000]
-            },
-            "delta": 1.0E-06,
-            "beta": 1.0E-08
-        }],
-    "unitcell":
-        {  
-            
+    "unitcell": [
+        {
+            "formfactor": "Cuboid",
+            "delta": -0.001898,
+            "beta": 0.001709,
+            "locations": [
+                [
+                    0,
+                    0,
+                    0
+                ]
+            ],
+            "length": 100000,
+            "width": 50,
+            "height": 45
+        },
+        {
+            "formfactor": "Cuboid",
+            "delta": -0.002031,
+            "beta": 0.001743,
+            "locations": [
+                [
+                    0,
+                    50,
+                    0
+                ]
+            ],
+            "length": 100000,
+            "width": 50,
+            "height": 45
         }
+    ],
+    "substrate": {
+        "material": "Si",
+        "delta": 0.00611960329,
+        "beta": 0.00450728787
+    }
 }

@@ -13,29 +13,59 @@ pylib = os.path.join(cfg['LIBDIR'], cfg['LDLIBRARY'])
 pyinc = cfg['INCLUDEPY']
 pyver = cfg['VERSION']
 
+class CMakeExtension(Extension):
+    """
+    setuptools.Extension for cmake
+    """
+    def __init__(self, name, sourcedir=''):
+        Extension.__init__(self, name, sources=[])
+        self.sourcedir = os.path.abspath(sourcedir)
+
+
+class CMakeBuildExt(build_ext):
+    """
+    setuptools build_exit which builds using cmake & make
+    You can add cmake args with the CMAKE_COMMON_VARIABLES environment variable
+    """
+    def build_extension(self, ext):
+        if isinstance(ext, CMakeExtension):
+            output_dir = os.path.abspath(
+                os.path.dirname(
+                    self.get_ext_fullpath(ext.name)))
+
+            build_type = 'Debug' if self.debug else 'Release'
+            cmake_args = ['cmake',
+                          ext.sourcedir,
+                          '-DUSING_SETUP_PY:BOOL=ON',
+                          '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + output_dir,
+                          '-DCMAKE_BUILD_TYPE=' + build_type,
+                          '-DPYBIND11_PYTHON_VERSION=' + pyver,
+                          '-DPYTHON_LIBRARY=' + pylib,
+                          '-DPYTHON_INCLUDE_DIR=' + pyinc
+                         ]
+            cmake_args.extend([x for x in os.environ.get('CMAKE_COMMON_VARIABLES', '').split(' ') if x])
+
+            env = os.environ.copy()
+            if not os.path.exists(self.build_temp):
+                os.makedirs(self.build_temp)
+            subprocess.check_call(cmake_args, cwd=self.build_temp, env=env)
+            subprocess.check_call(['make', '-j'], cwd=self.build_temp, env=env)
+            print()
+        else:
+            super().build_extension(ext)
+
 # versioning
 main_ns = {}
 ver_path = convert_path('gisaxs/_version.py')
 with open(ver_path) as ver_file:
     exec(ver_file.read(), main_ns)
 
-
-ext = Extension("gisaxs.cHipgisaxs",
-        language = 'c++',
-        include_dirs = ["src", pyinc],
-        extra_compile_args = ['-fopenmp' ],
-        extra_link_args = ['-fopenmp' ],
-        sources = [
-            "src/pyHipgisaxs.cpp",
-            "src/ff_tri_cpu.cpp"
-            ]
-        )
-
 setup(name='gisaxs',
       author ='Dinesh Kumar',
       version = main_ns['__version__'],
-      description = "Companian C++ library for HipGISAXS-2.0 package developed by CAMERA/LBL", 
+      description = "Companian C++/CUDA library for numerical form-factors",
       packages = [ 'gisaxs' ],
-      ext_modules = [ ext ]
+      license = "Tomocam Copyright (c) 2018",
+      ext_modules = [ CMakeExtension('gisaxs.cuTriangulationFF', os.getcwd()) ],
+      cmdclass = {'build_ext' : CMakeBuildExt } 
       )
-

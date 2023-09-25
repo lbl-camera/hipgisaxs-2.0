@@ -14,7 +14,10 @@ def image_show(img, qlims, vmin=None, vmax=None):
     axs.imshow(img, extent=qlims, cmap='jet', origin='lower', vmin=vmin, vmax=vmax)
     plt.show()
 
-def image_save(img, qlims, clims, fname):
+def image_save(img, fname, qlims, clims=None):
+
+    if clims is None:
+        clims = [0, 1]
 
     fig, axs = plt.subplots()
     kwargs = {'extent': qlims, 'cmap':'jet', 'origin': 'lower', 
