@@ -1,0 +1,5 @@
+{
+    "format": "hdf5",
+    "dataset": "cylinder",
+    "filename": "gisaxs.h5"
+} 

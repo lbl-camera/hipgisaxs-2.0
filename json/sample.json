@@ -1,0 +1,17 @@
+{
+    "unitcell": [
+        {
+            "formfactor": "Cylinder",
+            "delta": 6.1657E-06,
+            "beta": 2.163E-07,
+            "locations": [[ 0, 0, 0]],
+            "radius": 25.0,
+            "height": 10
+        } 
+    ],
+    "substrate": {
+        "material": "Si",
+        "delta": 4.8889242e-06,
+        "beta": 7.37912842e-08
+    }
+}

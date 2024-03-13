@@ -1,0 +1,15 @@
+{
+    "detector": {
+        "name": "Square",
+        "pixel_rows": 1024,
+        "pixel_cols": 1024,
+        "pixel_size": [
+            172e-06,
+            172e-06
+        ]
+    },
+    "sdd": 4.0,
+    "energy": 10000,
+    "incident_angle": 0.2,
+    "beam_center": [512, 32]
+}
