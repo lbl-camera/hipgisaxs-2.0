@@ -56,7 +56,7 @@ class CMakeBuildExt(build_ext):
 
 # versioning
 main_ns = {}
-ver_path = convert_path('gisaxs/_version.py')
+ver_path = convert_path('hipgisaxs/_version.py')
 with open(ver_path) as ver_file:
     exec(ver_file.read(), main_ns)
 
@@ -65,7 +65,7 @@ setup(name='hipgisaxs',
       version = main_ns['__version__'],
       description = "Companian C++/CUDA library for numerical form-factors",
       packages = [ 'hipgisaxs' ],
-      license = "Tomocam Copyright (c) 2018",
-      ext_modules = [ CMakeExtension('gisaxs.ff.meshff', os.getcwd()) ],
+      license = "Simplified BSD License",
+      ext_modules = [ CMakeExtension('hipgisaxs.ff.meshff', os.getcwd()) ],
       cmdclass = {'build_ext' : CMakeBuildExt } 
       )

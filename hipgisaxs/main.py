@@ -4,10 +4,13 @@ import json
 import h5py
 
 import numpy as np
+from collections import OrderedDict
 
 import matplotlib.pyplot as plt
 
 from hipgisaxs import Unitcell
+from hipgisaxs.rotation import rotate
+from hipgisaxs.ff import cuboid, sphere
 from hipgisaxs.fresnel import propagation_coeffs
 from hipgisaxs.structure_factor import structure_factor
 from hipgisaxs.detector import Detector
@@ -74,18 +77,28 @@ if __name__ == '__main__':
     scat = np.zeros_like(qx, dtype=complex)
     for j in range(4):
         ff = unitcell.ff(qx, qy, qz[j])
-        sf = structure_factor(qx, qy, qz[j], dspacing, repeats)
-        scat += propagation[j] * sf * ff
+        scat += propagation[j] * ff
+    
+    data = np.log(np.abs(scat)**2 + 1).reshape(detector.shape)
+    plt.imshow(data, origin='lower')
+    plt.savefig('falala.jpg')
 
-    # compute intensity
-    img = np.abs(scat.reshape(detector.shape))**2 
-
-    # write to hdf5
+    """
+    energy_grp = str(energy)+'ev'
+    incident_ang = str(cfg['incident_angle'])
     fname = output['filename']
-    fp = h5py.File(fname, 'w')
-    dsetname = output['dataset']
-    dset = fp.create_dataset(dsetname, data = img)
-    qp = np.sign(qy) * np.sqrt(qx**2 + qy**2)
-    qv = qz[0]
+
+    fp = h5py.File(fname, 'a')
+    dst = os.path.join(energy_grp, incident_ang)
+    if not dst in fp:
+        fp.create_group(dst)
+
+    # intensities
+    if 'I' in fp[dst]:
+        dset = fp[os.path.join(dst, 'I')]
+        dset[:] = img 
+    else:
+        dset = fp[dst].create_dataset('I', data = img)
     dset.attrs['qlims'] = [qp.min(), qp.max(), qv.min(), qv.max()]
     fp.close()
+    """

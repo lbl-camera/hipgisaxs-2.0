@@ -1,4 +1,5 @@
 {
     "format": "hdf5",
-    "filename": "unexposed.h5"
-} 
+    "dataset": "cuboid",
+    "filename": "gisaxs.h5"
+}

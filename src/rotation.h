@@ -3,6 +3,8 @@
 
 #include "cmplx_utils.cuh"
 
+#include "types.h"
+
 #ifndef ROT_MATRIX__H
 #define ROT_MATRIX__H
 
@@ -13,7 +15,7 @@ namespace hig {
 
         public:
             // constructor 1
-            __host__ __device__ 
+            __hstdev__
             RotMatrix_t() {
                 data_[0] = 1.;
                 data_[1] = 0.;
@@ -27,19 +29,19 @@ namespace hig {
             }
 
             // constructor 2
-            __host__ __device__ 
+            __hstdev__
             RotMatrix_t(double *a) {
                 for (int i = 0; i < 9; i++) data_[i] = a[i];
             }
 
             // copy constructor
-            __host__ __device__ 
+            __hstdev__
             RotMatrix_t(const RotMatrix_t &rhs) {
                 for (int i = 0; i < 9; i++) data_[i] = rhs.data_[i];
             }
 
             // assignment operator
-            __host__ __device__ 
+            __hstdev__
             RotMatrix_t operator=(const RotMatrix_t &rhs) {
                 for (int i = 0; i < 9; i++) data_[i] = rhs.data_[i];
                 return *this;

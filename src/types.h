@@ -7,8 +7,14 @@
 
 #ifndef HIG_TYPES__H
 #define HIG_TYPES__H
+#ifdef __CUDACC__
 #define __hstdev__ __host__ __device__
 #define __inline_hstdev__ __inline__ __host__ __device__
+#else
+#define __hstdev__
+#define __inline_hstdev__
+#define __device__
+#endif
 
 namespace hig {
     struct vector3_t {

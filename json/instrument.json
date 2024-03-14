@@ -1,15 +1,12 @@
 {
     "detector": {
-        "name": "Square",
-        "pixel_rows": 1024,
-        "pixel_cols": 1024,
-        "pixel_size": [
-            172e-06,
-            172e-06
-        ]
+        "name": "Eiger",
+        "pixel_rows": 1030,
+        "pixel_cols": 1065,
+        "pixel_size": [ 75e-06, 75e-06 ]
     },
-    "sdd": 4.0,
-    "energy": 10000,
-    "incident_angle": 0.2,
-    "beam_center": [512, 32]
+    "sdd": 1.05,
+    "energy": 8040,
+    "incident_angle": 0.19,
+    "beam_center": [ 512, 34 ]
 }
