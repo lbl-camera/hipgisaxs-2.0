@@ -1,18 +1,25 @@
-#include <array>
+#include <vector>
 #include <execution>
 #include <complex>
 
 template <typename T>
-std::complex<T> coneff(const std::array<T> &qx,
-    const std::array<T> &qy,
-    const std::array<T> &qz,
-    T R0, T R1, T h,
-    const std::array<T> &rotation) {
+std::vector<complex<T>> coneff(const vector<T> &qx,
+    const std::vector<T> &qy,
+    const std::vector<T> &qz,
+    T R, T H, T Angle,
+    const std::vector<T> &rotation) {
 
-    // find-angle
-    T tan_a;
-    std::array<T, qx.size()> qp;
-    std::transform(std::execution::par_unseq,
-        qx.begin(), qx.end(), qy.begin(), qp.begin(),
-        [](T x, T y) { return (x * x + y * y); })
-}
+    // side-angle
+    T tan_a = std::tan(Angle);
+    auto rh = R - H / tan_a;
+    if (rh < 0) throw "exception: illeagal angle";
+
+    // form rotation matrix
+    //
+    std::vector<complex<T>> ff;
+
+    for (int i = 0; i < nq; i++) {
+        auto qp = std::sqrt(qx[i]*qx[i] + qy[i]*qy[i]);
+        auto qv = qz[i] * tan_a;
+
+        ff[i] = inegrate(fn, params, R, rh);

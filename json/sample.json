@@ -1,7 +1,7 @@
 {
     "unitcell": [
         {
-            "formfactor": "Cuboid",
+            "formfactor": "Sphere",
             "delta": -0.001898,
             "beta": 0.001709,
             "locations": [
@@ -11,9 +11,7 @@
                     0
                 ]
             ],
-            "length": 100000,
-            "width": 50,
-            "height": 45
+            "radius": 50
         },
         {
             "formfactor": "Cuboid",
@@ -37,3 +35,4 @@
         "beta": 0.00450728787
     }
 }
+

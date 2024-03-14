@@ -11,11 +11,10 @@ set(CMAKE_CUDA_STANDARD 17)
 set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -std=c++17")
 
 
-option(ENABLE_TESTS "Enable tests" OFF)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 set(SRC 
     ${PROJECT_SOURCE_DIR}/src/ff_tri_gpu.cu
+    ${PROJECT_SOURCE_DIR}/src/pyTriangulation.cpp
    )
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
@@ -40,16 +39,16 @@ if (USING_SETUP_PY)
 endif(USING_SETUP_PY)
 
 
-add_library(cuTriangulationFF MODULE src/pyTriangulation.cpp ${SRC})
-set_target_properties(cuTriangulationFF PROPERTIES 
+add_library(meshff MODULE ${SRC})
+set_target_properties(meshff PROPERTIES 
                       CXX_VISIBILITY_PRESET "hidden" 
                       PREFIX "${PYTHON_MODULE_PREFIX}" 
                       SUFFIX "${PYTHON_MODULE_EXTENSION}")
-target_link_libraries(cuTriangulationFF PRIVATE pybind11::module)
-target_link_libraries(cuTriangulationFF PRIVATE ${Python_LIBRARIES})
-target_compile_features(cuTriangulationFF PRIVATE cxx_std_17)
-set_target_properties(cuTriangulationFF PROPERTIES CUDA_ARCHITECTURES "60;61;62")
+target_link_libraries(meshff PRIVATE pybind11::module)
+target_link_libraries(meshff PRIVATE ${Python_LIBRARIES})
+target_compile_features(meshff PRIVATE cxx_std_17)
+set_target_properties(meshff PROPERTIES CUDA_ARCHITECTURES "60;61;62")
 
-install(TARGETS cuTriangulationFF 
-        ARCHIVE DESTINATION gisaxs
-        LIBRARY DESTINATION gisaxs)
+#install(TARGETS cuTriangulationFF 
+#        ARCHIVE DESTINATION gisaxs
+#        LIBRARY DESTINATION gisaxs)

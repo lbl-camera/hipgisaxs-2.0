@@ -58,7 +58,7 @@ np_array_t<complex<double>> triangulationff_wrapper(
     return pyff;
 }
 
-PYBIND11_MODULE(cuTriangulationFF, m) {
+PYBIND11_MODULE(meshff, m) {
     m.doc() = "Python interface to GPU accelerated gisaxs functions";
-    m.def("triangulationff", triangulationff_wrapper);
+    m.def("meshff", triangulationff_wrapper);
 }

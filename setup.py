@@ -60,12 +60,12 @@ ver_path = convert_path('gisaxs/_version.py')
 with open(ver_path) as ver_file:
     exec(ver_file.read(), main_ns)
 
-setup(name='gisaxs',
+setup(name='hipgisaxs',
       author ='Dinesh Kumar',
       version = main_ns['__version__'],
       description = "Companian C++/CUDA library for numerical form-factors",
-      packages = [ 'gisaxs' ],
+      packages = [ 'hipgisaxs' ],
       license = "Tomocam Copyright (c) 2018",
-      ext_modules = [ CMakeExtension('gisaxs.cuTriangulationFF', os.getcwd()) ],
+      ext_modules = [ CMakeExtension('gisaxs.ff.meshff', os.getcwd()) ],
       cmdclass = {'build_ext' : CMakeBuildExt } 
       )
