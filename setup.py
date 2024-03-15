@@ -1,10 +1,11 @@
 
-
 import os
 import subprocess
+import logging
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 from distutils.util import convert_path
+from distutils.errors import CCompilerError, DistutilsExecError, DistutilsPlatformError
 
 # hack to make it work in virtualenv
 import sysconfig
@@ -12,6 +13,12 @@ cfg = sysconfig.get_config_vars()
 pylib = os.path.join(cfg['LIBDIR'], cfg['LDLIBRARY'])
 pyinc = cfg['INCLUDEPY']
 pyver = cfg['VERSION']
+
+# logging
+logging.basicConfig()
+log = logging.getLogger(__file__)
+ext_errors = (CCompilerError, DistutilsExecError, DistutilsPlatformError, IOError, SystemExit)
+
 
 class CMakeExtension(Extension):
     """
@@ -60,12 +67,27 @@ ver_path = convert_path('hipgisaxs/_version.py')
 with open(ver_path) as ver_file:
     exec(ver_file.read(), main_ns)
 
-setup(name='hipgisaxs',
-      author ='Dinesh Kumar',
-      version = main_ns['__version__'],
-      description = "Companian C++/CUDA library for numerical form-factors",
-      packages = [ 'hipgisaxs' ],
-      license = "Simplified BSD License",
-      ext_modules = [ CMakeExtension('hipgisaxs.ff.meshff', os.getcwd()) ],
-      cmdclass = {'build_ext' : CMakeBuildExt } 
-      )
+
+attrs = {
+    'name': 'hipgisaxs', 
+    'author': 'Dinesh Kumar',
+    'version': main_ns['__version__'],
+    'description': 'GIS Simulator',
+    'packages': 'hipgisaxs',
+    'license': 'HipGISAXS v2.0 License',
+    'packages': ['hipgisaxs'],
+} 
+
+
+try:
+    ext_attrs = { 'ext_modules': [CMakeExtension('hipgisaxs.ff.meshff', os.getcwd())],
+                  'cmdclass': {'build_ext': CMakeBuildExt}
+    }
+    kwargs = attrs.copy()
+    kwargs.update(ext_attrs) 
+    setup(**kwargs)
+except ext_errors as ex:
+    log.warn(ex)
+    log.warn('CUDA Extension was not complied. Tyring without the extension')
+    setup(**attrs)
+    log.info('HipGISAXS was installed without CUDA Extensions. If you think this is mistake, check logfiles and fix errors.')
