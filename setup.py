@@ -6,6 +6,7 @@ from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 from distutils.util import convert_path
 from distutils.errors import CCompilerError, DistutilsExecError, DistutilsPlatformError
+from subprocess import CalledProcessError
 
 # hack to make it work in virtualenv
 import sysconfig
@@ -17,7 +18,7 @@ pyver = cfg['VERSION']
 # logging
 logging.basicConfig()
 log = logging.getLogger(__file__)
-ext_errors = (CCompilerError, DistutilsExecError, DistutilsPlatformError, IOError, SystemExit)
+ext_errors = (CalledProcessError, CCompilerError, DistutilsExecError, DistutilsPlatformError, IOError, SystemExit)
 
 
 class CMakeExtension(Extension):
@@ -87,7 +88,7 @@ try:
     kwargs.update(ext_attrs) 
     setup(**kwargs)
 except ext_errors as ex:
-    log.warn(ex)
-    log.warn('CUDA Extension was not complied. Tyring without the extension')
+    log.warning(ex)
+    log.warning('CUDA Extension was not complied. Tyring without the extension')
     setup(**attrs)
     log.info('HipGISAXS was installed without CUDA Extensions. If you think this is mistake, check logfiles and fix errors.')
