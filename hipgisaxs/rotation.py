@@ -1,9 +1,10 @@
-#! /usr/bin/env python
 
-from math import sin,cos
-import math as m
-import numpy as np
-import collections
+try:
+    import cupy as np
+    from cupy import sin, cos
+except ImportError:
+    import numpy as np
+    from numpy import sin, cos
 
 def Rx(a):
     c = np.cos(a)
@@ -54,14 +55,38 @@ def rotation_matrix(axis, angles):
     return None
 
 def rotate(qx, qy, qz, orientations):
+    """
+    Rotate q-values by given Euler angles.
+
+    Parameters
+    ----------
+        qx : array_like
+            q-values along x-axis.
+        qy : array_like
+            q-values along y-axis.
+        qz : array_like
+            q-values along z-axis.
+        orientations : dict
+            Dictionary containing axis and angles for rotation.
+            Example: {'x': 0.1, 'y': 0.2, 'z': 0.3}
+
+    Returns
+    -------
+        qx_rot : array_like
+            Rotated q-values along x-axis.
+        qy_rot : array_like
+            Rotated q-values along y-axis.
+        qz_rot : array_like
+            Rotated q-values along z-axis.
+    """
 
     # build rotation matrix 
-    if isinstance(orientations, collections.OrderedDict):
+    if isinstance(orientations, dict):
         rot = np.eye(3)
         for axis, angles in orientations.items():
             rot = np.matmul(rotation_matrix(axis, angles), rot) 
     else:
-        raise ValueError('datatype for orientations must be an OrderedDict')
+        raise ValueError('datatype for orientations must be dict')
 
     # arrange q-values in 3xN matrix
     q = np.vstack([qx.flatten(),qy.flatten(),qz.flatten()])
