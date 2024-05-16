@@ -1,0 +1,27 @@
+{
+    "unitcell": [
+        {
+            "formfactor": "CoreShell",
+            "Core": {
+                "formfactor": "Sphere",
+                "radius": 20,
+                "delta": 6.1657e-06,
+                "beta": 2.163e-07
+            },
+            "Shell": {
+                "formfactor": "Cuboid",
+                "length": 50,
+                "width": 50,
+                "height": 50,
+                "delta": 2.1657e-06,
+                "beta": 1.1631e-07
+            }
+        }
+    ],
+    "substrate": {
+        "material": "Si",
+        "delta": 4.88e-06,
+        "beta": 7.37e-08
+    }
+}
+

@@ -8,5 +8,5 @@
     "sdd": 1.05,
     "energy": 8040,
     "incident_angle": 0.19,
-    "beam_center": [ 512, 34 ]
+    "beam_center": [0, 0]
 }

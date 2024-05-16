@@ -3,7 +3,10 @@ import sys
 import json
 import h5py
 
-import numpy as np
+try:
+    import cupy as np
+except ImportError:
+    import numpy as np
 
 import matplotlib.pyplot as plt
 
@@ -80,6 +83,10 @@ if __name__ == '__main__':
     # compute intensity
     img = np.abs(scat.reshape(detector.shape))**2 
 
+    # if we have cupy, transfer to numpy
+    if np.__name__ == 'cupy':
+        img = img.get()
+
     # write to hdf5
     fname = output['filename']
     fp = h5py.File(fname, 'w')
@@ -87,5 +94,8 @@ if __name__ == '__main__':
     dset = fp.create_dataset(dsetname, data = img)
     qp = np.sign(qy) * np.sqrt(qx**2 + qy**2)
     qv = qz[0]
+    if np.__name__ == 'cupy':
+        qp = qp.get()
+        qv = qv.get()
     dset.attrs['qlims'] = [qp.min(), qp.max(), qv.min(), qv.max()]
     fp.close()
