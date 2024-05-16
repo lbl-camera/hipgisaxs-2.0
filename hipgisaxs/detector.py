@@ -9,6 +9,12 @@ except ImportError:
     from numpy import cos, sin
 
 class Detector:
+    """
+    Detector class to define the detector geometry. 
+    The detector is defined by the name, shape, and pixel size.
+    It is used to calculate the q-vectors and q-values for the detector.
+    """
+    
     def __init__(self, name, shape, pixle_size):
         self.name = name
         self.shape = shape
