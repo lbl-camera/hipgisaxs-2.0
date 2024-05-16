@@ -1,7 +1,12 @@
-#! /usr/bin/env python
 
-import numpy as np
-from numpy import sin, cos
+# This file contains the Detector class which is used to define the detector
+
+try:
+    import cupy as np
+    from cupy import cos, sin
+except ImportError:
+    import numpy as np
+    from numpy import cos, sin
 
 class Detector:
     def __init__(self, name, shape, pixle_size):
