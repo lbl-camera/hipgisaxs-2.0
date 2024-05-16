@@ -6,24 +6,24 @@ except ImportError:
 import numpy as np
 from .meshff import meshff
 
-"""
-This function calculates the form factor of an object with a given mesh.
-
-Parameters
-----------
-    qx : ndarray (float64)
-    qy : ndarray (float64)
-    qz : ndarray (complex128)
-    rotation : ndarray (float64)
-    vertices : numpy.ndarray (float64)
-
-Returns
--------
-    ff : numpy.ndarray (complex128)
-        The form factor of the object with the given mesh.
-
-"""
 def MeshFF(qx, qy, qz, rotation, vertices):
+    """
+    This function calculates the form factor of an object with a given mesh. It accepts both numpy and cupy arrays.
+
+    Parameters
+    ----------
+        qx : numpy.ndarray (float64) or cupy.ndarray (float64)
+        qy : numpy.ndarray (float64) or cupy.ndarray (float64)
+        qz : numpy.ndarray (complex128) or cupy.ndarray (complex128)
+        rotation : numpy.ndarray (float64) or cupy.ndarray (float64)
+        vertices : numpy.ndarray (float64)
+
+    Returns
+    -------
+        ff : numpy.ndarray (complex128) or cupy.ndarray (complex128)
+            The form factor of the object with the given mesh.
+
+    """
 
 
     # ensure types
