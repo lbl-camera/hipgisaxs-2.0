@@ -7,7 +7,7 @@ from .sphere import sphere
 from .gratings import trapezoid, trapezoid_stack
 
 try:
-    from .meshff import meshff
+    from .meshwrapper import MeshFF
 except ImportError:
     print('Wanring! failed to import meshff extension.')
 
