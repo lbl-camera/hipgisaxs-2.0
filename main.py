@@ -2,6 +2,7 @@ import os
 import sys
 
 import h5py
+import click
 
 import json
 
@@ -47,6 +48,12 @@ def setup_experiment(instrument, sample, output):
 
     return experiment
 
+
+# TODO: consider adding a console_scripts entrypoint to setup.py
+@click.command()
+@click.argument('instrument')
+@click.argument('sample')
+@click.argument('output')
 def run_experiment(instrument, sample, output):
     # pass in either instrument object or instrument file
     experiment = setup_experiment(instrument, sample, output)
