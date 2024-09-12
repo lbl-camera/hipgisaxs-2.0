@@ -1,5 +1,5 @@
 {
     "format": "hdf5",
-    "dataset": "cuboid",
-    "filename": "gisaxs.h5"
+    "dataset": "gisaxs",
+    "filename": "covid19.h5"
 }

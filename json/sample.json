@@ -1,12 +1,13 @@
 {
     "unitcell": [
         {
-            "formfactor": "meshff",
+            "formfactor": "Cone",
             "delta": 2.5e-06,
             "beta": 1.2e-07,    
             "locations": [{"x": 0, "y": 0, "z": 0}],
-            "orientation": { "z": 0.3 },
-            "meshfile": "/home/dkumar/data/covid19/covid19_spike_protein.stl"
+            "radius": 50,
+            "height": 50,
+            "angle": 70
         }
     ],
     "substrate": {
