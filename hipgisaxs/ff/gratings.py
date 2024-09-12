@@ -34,14 +34,3 @@ def trapezoid_stack(qy, qz, y1, y2, height, langle, rangle=None):
         y1 += height / m1
         y2 += height / m2 
     return ff
-
-if __name__ == '__main__':
-    qp = 0.125
-    qz = np.linspace(0, 2, 1024) 
-    langle = np.deg2rad([30, 90, 90, 80, 30])
-
-    ff = trapezoid_stack(0.125, qz, -45, 45, 10, langle)
-
-    import matplotlib.pyplot as plt
-    plt.semilogy(qz, np.abs(ff)**2)
-    plt.show() 
