@@ -6,37 +6,10 @@ import click
 
 import json
 
-try:
-    import cupy as np
-except ImportError:
-    import numpy as np
+import numpy as np
 
-from hipgisaxs import Unitcell
-from hipgisaxs.fresnel import propagation_coeffs
-from hipgisaxs.structure_factor import structure_factor
-from hipgisaxs.detector import Detector
+from hipgisaxs import build_instrument, build_sample, setup_experiment, build_output, run_experiment
 
-
-def build_instrument(instrument_file):
-    with open(instrument_file, 'r') as fp:
-        instrument_dict = json.load(instrument_file)
-    instrument = Instrument(**instrument_dict)  # TODO: implement Instrument as a NamedTuple or similar
-
-    return instrument
-
-
-def build_sample(sample_file):
-    with open(sample_file, 'r') as fp:
-        sample_dict = json.load(sample_file)
-    sample = Sample(**sample_dict)  # TODO: implement Sample as a NamedTuple or similar
-    return sample
-
-
-def build_output(output_file):
-    with open(output_file, 'r') as fp:
-        output_dict = json.load(output_file)
-    output = Output(**output_dict)  # TODO: implement Output as a NamedTuple or similar
-    return output
 
 def setup_experiment(instrument, sample, output):
     # pass in either instrument object or instrument file
@@ -56,9 +29,11 @@ def setup_experiment(instrument, sample, output):
 @click.argument('output')
 def run_experiment(instrument, sample, output):
     # pass in either instrument object or instrument file
-    experiment = setup_experiment(instrument, sample, output)
-
+    experiment = setup_experiment(instrument, sample)
     data = experiment.run(...)
+
+    if output is not None:
+        output.write(data, metadata=experiment.metadata)
 
     return data
 

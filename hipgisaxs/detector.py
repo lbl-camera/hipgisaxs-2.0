@@ -1,36 +1,24 @@
 
 # This file contains the Detector class which is used to define the detector
 
-try:
-    import cupy as np
-    from cupy import cos, sin
-except ImportError:
-    import numpy as np
-    from numpy import cos, sin
+import numpy as np
+from numpy import cos, sin
 
 class Detector:
     """
-    Detector class to define the detector geometry. 
-    The detector is defined by the name, shape, and pixel size.
-    It is used to calculate the q-vectors and q-values for the detector.
+    @brief The detector is defined by the name, shape, and pixel size.  It is used to 
+    calculate the q-vectors and q-values for the detector.
+
+    Parameters:
+        name: name of the detector
+        shape: shape of the detector (nrow, ncol)
+        pixle_size: pixel size of the detector (dx, dy)
     """
     
-    def __init__(self, name, shape, pixle_size):
+    def __init__(self, name = 'Pilatus1M', shape = (981, 1043), pixle_size = (0.172, 0.172)):
         self.name = name
         self.shape = shape
         self.pixle_size = pixle_size
-
-    
-    @classmethod
-    def from_dict(cls, det):
-        """
-        Create a detector object from the JSON object.
-        """
-        n = det['name'] 
-        rows = det['pixel_rows']
-        cols = det['pixel_cols']
-        pixel = det['pixel_size']
-        return cls(n, [rows, cols], pixel)        
 
     def angles(self, sdd, center):
         """
