@@ -8,18 +8,11 @@ import json
 
 import numpy as np
 
-from hipgisaxs import build_instrument, build_sample, setup_experiment, build_output, run_experiment
+from hipgisaxs import build_instrument
+from hipgisaxs import build_sample
+from hipgisaxs import build_output
+from hipgisaxs import setup_experiment, run_experiment
 
-
-def setup_experiment(instrument, sample, output):
-    # pass in either instrument object or instrument file
-    if isinstance(instrument, str):
-        instrument = build_instrument(instrument)
-    ... # same for sample, output
-
-    experiment = Experiment(instrument, sample, output)
-
-    return experiment
 
 
 # TODO: consider adding a console_scripts entrypoint to setup.py
